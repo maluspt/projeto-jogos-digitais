@@ -2,8 +2,10 @@ import math
 import pygame
 from pygame.locals import *
 import random
+import os
 
 pygame.init()
+
 
 # Colors
 
@@ -15,12 +17,15 @@ white = (255, 255, 255)
 
 pills = pygame.image.load('assets\images\pills.png')
 bg = pygame.image.load('assets\images\papap.jpg')
+water1shoot = pygame.image.load('assets\images\pwater.png')
+
 
 walkRight = [pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
     'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'), pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
     'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'), pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
     'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png')]
-survivorStanding = pygame.image.load('assets\images\psurvivorStanding.png')
+survivorStanding = pygame.image.load(
+    'assets\images\psurvivorStanding.png')
 survivorJumping = pygame.image.load('assets\images\pjump.png')
 
 surivMove = pygame.image.load('assets\images\corona2.png')
@@ -32,13 +37,13 @@ surivMoving = [redSuriv1, redSuriv2, redSuriv1, redSuriv2,
 # Screen
 display_width = 800
 display_height = 600
-bgX = 0
-bgX2 = bg.get_width()
-x = (display_width * 0.45)
-y = (display_height * 0.8)
-speed = 6
 screen = pygame.display.set_mode((display_width, display_height))
 clock = pygame.time.Clock()
+font = pygame.font.SysFont("comicsans", 30, True)
+score = 0
+items_spawn_time = [1000, 20, 30]
+global_time = pygame.time.get_ticks()
+dt = clock.tick()
 
 
 class suriv(object):
@@ -50,27 +55,61 @@ class suriv(object):
         self.end = end
         self.walkCount = 0
         self.vel = 3
-        self.path = [self.x, self.end]
+        self.path = [x + 20, end + 20]
         self.hitbox = [self.x, self.y, 50, 50]
+        self.health = 1
+        self.visible = True
 
     def draw(self, screen):
         self.move()
-        if self.walkCount + 1 >= 27:
-            self.walkCount = 0
-        if self.vel < 0:
-            screen.blit(surivMoving[self.walkCount // 3], (self.x, self.y))
-            self.walkCount += 1
+        if self.visible:
+            if self.walkCount + 1 >= 27:
+                self.walkCount = 0
+            if self.vel > 0:
+                screen.blit(surivMoving[self.walkCount // 3], (self.x, self.y))
+                self.walkCount += 1
+            else:
+                screen.blit(surivMoving[self.walkCount // 3], (self.x, self.y))
+                self.walkCount += 1
+            pygame.draw.rect(
+                screen, (255, 0, 0), (self.hitbox[0], self.hitbox[1] - 5, 30, 10))
+            pygame.draw.rect(
+                screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 5, 30 - (3 * (1 - self.health)), 10))
+            self.hitbox = (self.x, self.y, 31, 57)
 
     def move(self):
         if self.vel > 0:
-            if self.x + self.vel < self.path[1]:
+            if self.x + self.vel < self.path[1] + self.vel:
                 self.x += self.vel
             else:
                 self.vel = self.vel * -1
+                self.x += self.vel
+                self.walkCount = 0
+        else:
+            if self.x > self.path[0] - self.vel:
+                self.x += self.vel
+            else:
+                self.vel = self.vel * -1
+                self.x += self.vel
                 self.walkCount = 0
 
-    def hit(self):
-        print("hit")
+    def hit(self, ):
+        if self.health >= 0:
+            self.health -= 1
+        else:
+            self.visible = False
+
+
+class item(object):
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        #self.image = image
+
+    def draw(self, screen):
+        screen.blit(pills, (self.x, self.y))
 
 
 class player(object):
@@ -79,7 +118,7 @@ class player(object):
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 1
+        self.vel = 3
         self.isJumping = False
         self.left = False
         self.right = False
@@ -87,6 +126,8 @@ class player(object):
         self.jumpCount = 10
         self.standing = True
         self.hitbox = [self.x + 50, self.y + 80, 90, 150]
+        self.health = 10
+        self.isAlive = True
 
     def draw(self, screen):
         if self.walkCount + 1 >= 27:
@@ -105,25 +146,44 @@ class player(object):
                 screen.blit(survivorStanding, (self.x, self.y))
             else:
                 screen.blit(survivorStanding, (self.x, self.y))
+        pygame.draw.rect(
+            screen, (255, 0, 0), (self.hitbox[0], self.hitbox[1] - 30, 100, 10))
+        pygame.draw.rect(
+            screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 30, 100 - (5 * (10 - self.health)), 10))
+        self.hitbox = [self.x + 50, self.y + 80, 90, 150]
+
+    def hit(self):
+        if self.health > 0:
+            self.health -= 1
+        else:
+            self.visible = False
 
 
 class projectile(object):
-    def __init__(self, x, y, r, color, facing):
+    def __init__(self, x, y, facing):
         self.x = x
         self.y = y
-        self.r = r
-        self.color = color
         self.facing = facing
-        self.vel = 5 * facing
+        self.vel = 8 * facing
+        self.hitbox = [self.x, self.y, 50, 50]
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
+        screen.blit(water1shoot, (self.x, self.y))
+
+
+def isCollision(enemyX, enemyY, bulletX, bulletY):
+    distance = math.sqrt(math.pow(enemyX - bulletX, 2) +
+                         (math.pow(enemyY - bulletY, 2)))
+    if distance < 27:
+        return True
+    else:
+        return False
 
 
 def redrawWindow():
-    screen.blit(bg, (bgX, 0))
-    screen.blit(bg, (bgX2, 0))
     survivor.draw(screen)
+    text = font.render("Score: " + str(score), 1, (0, 0, 0))
+    screen.blit(text, (390, 10))
 
     for suriv in weakSurivs:
         suriv.draw(screen)
@@ -135,25 +195,28 @@ def redrawWindow():
 
 survivor = player(40, 300, 64, 64)
 weakSurivs = []
-maxEnemies = 10
+maxEnemies = 5
 for enemy in range(maxEnemies):
     weakSurivs.append(suriv(random.randint(0, display_width), random.randint(
-        0, display_height), 64, 64, 800))
+        100, 300), 64, 64, 800))
 
 bullets = []
 shootLoop = 0
 run = True
+bgX = 0
+pill = item(100, 100, 50, 50)
+global_time += dt
 
 while run:
     pygame.time.delay(15)
+    rel_x = bgX % bg.get_rect().width
+    screen.blit(bg, (rel_x - bg.get_rect().width, 0))
+    if rel_x < display_width:
+        screen.blit(bg, (rel_x, 0))
     bgX -= 1
-    bgX2 -= 1
 
-    if bgX < bg.get_width() * -1:
-        bgX = bg.get_width()
-
-    if bgX2 < bg.get_width() * -1:
-        bgX2 = bg.get_width()
+    if len(weakSurivs) <= 3:
+        pill.draw(screen)
 
     if shootLoop > 0:
         shootLoop += 1
@@ -170,16 +233,18 @@ while run:
 
     for bullet in bullets:
         for suriv in weakSurivs:
-            if bullet.y - bullet.r < suriv.hitbox[1] + suriv.hitbox[3] and bullet.y + bullet.r > suriv.hitbox[1]:
-                if bullet.x + bullet.r > suriv.hitbox[0] and bullet.x - bullet.r < suriv.hitbox[0] + suriv.hitbox[2]:
-                    suriv.hit()
-                    bullets.pop(bullets.index(bullet))
+            collision = isCollision(suriv.x, suriv.y, bullet.x, bullet.y)
+            if collision:
+                suriv.hit()
+                score += 1
+                bullets.pop(bullets.index(bullet))
+                weakSurivs.pop(weakSurivs.index(suriv))
 
     for bullet in bullets:
-        if bullet.x < display_width and bullet.x > 0:
-            bullet.x += bullet.vel
-        else:
+        if bullet.x > display_width or bullet.x < 0:
             bullets.pop(bullets.index(bullet))
+        else:
+            bullet.x += bullet.vel
 
     keys = pygame.key.get_pressed()
 
@@ -191,7 +256,7 @@ while run:
 
         if len(bullets) < 10:
             bullets.append(projectile(round(
-                survivor.x + survivor.width * 2), round(survivor.y + survivor.height * 3), 6, blue, facing))
+                survivor.x + survivor.width // 2), round(survivor.y + survivor.height // 3), facing))
         shootLoop = 1
     if keys[pygame.K_LEFT] and survivor.x > survivor.vel:
         survivor.x -= survivor.vel
