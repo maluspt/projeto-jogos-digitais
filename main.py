@@ -16,7 +16,9 @@ white = (255, 255, 255)
 # Sprites
 
 pills = pygame.image.load('assets\images\pills.png')
-bg = pygame.image.load('assets\images\papap.jpg')
+bgForest = pygame.image.load('assets\images\pforest.jpg')
+bgForest2 = pygame.image.load('assets\images\pforest2.png')
+bgDesert = pygame.image.load('assets\images\pdesert.png')
 water1shoot = pygame.image.load('assets\images\pwater.png')
 
 
@@ -24,16 +26,46 @@ walkRight = [pygame.image.load('assets\images\psurvivor.png'), pygame.image.load
     'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'), pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
     'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'), pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
     'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png')]
+
+walkLeft = [pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
+    'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png'), pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
+    'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png'), pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
+    'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png')]
 survivorStanding = pygame.image.load(
     'assets\images\psurvivorStanding.png')
 survivorJumping = pygame.image.load('assets\images\pjump.png')
 
+# Weak surivs
 surivMove = pygame.image.load('assets\images\corona2.png')
 surivStanding = pygame.image.load('assets\images\corona1.png')
 redSuriv1 = pygame.transform.scale(surivStanding, (50, 50))
 redSuriv2 = pygame.transform.scale(surivMove, (50, 50))
 surivMoving = [redSuriv1, redSuriv2, redSuriv1, redSuriv2,
                redSuriv1, redSuriv2, redSuriv1, redSuriv2, redSuriv1]
+
+# Medium surivs
+
+surivMove2 = pygame.image.load('assets\images\corona4.png')
+surivStanding2 = pygame.image.load('assets\images\corona5.png')
+surivStanding22 = pygame.image.load('assets\images\corona6.png')
+greenSuriv1 = pygame.transform.scale(surivStanding2, (50, 50))
+greenSuriv2 = pygame.transform.scale(surivMove2, (50, 50))
+greenSuriv3 = pygame.transform.scale(surivStanding22, (50, 50))
+surivMoving2 = [greenSuriv1, greenSuriv2, greenSuriv3, greenSuriv1,
+                greenSuriv2, greenSuriv3, greenSuriv1, greenSuriv2, greenSuriv3]
+
+# Strong surivs
+
+surivMove3 = pygame.image.load('assets\images\corona7.png')
+surivStanding3 = pygame.image.load('assets\images\corona8.png')
+surivStanding33 = pygame.image.load('assets\images\corona9.png')
+blueSuriv1 = pygame.transform.scale(surivStanding3, (50, 50))
+blueSuriv2 = pygame.transform.scale(surivMove3, (50, 50))
+blueSuriv3 = pygame.transform.scale(surivStanding33, (50, 50))
+surivMoving3 = [blueSuriv1, blueSuriv2, blueSuriv3, blueSuriv1,
+                blueSuriv2, blueSuriv3, blueSuriv1, blueSuriv2, blueSuriv3]
+
+
 # Screen
 display_width = 800
 display_height = 600
@@ -41,13 +73,10 @@ screen = pygame.display.set_mode((display_width, display_height))
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("comicsans", 30, True)
 score = 0
-items_spawn_time = [1000, 20, 30]
-global_time = pygame.time.get_ticks()
-dt = clock.tick()
 
 
 class suriv(object):
-    def __init__(self, x, y, width, height, end):
+    def __init__(self, x, y, width, height, end, health):
         self.x = x
         self.y = y
         self.width = width
@@ -57,7 +86,7 @@ class suriv(object):
         self.vel = 3
         self.path = [x + 20, end + 20]
         self.hitbox = [self.x, self.y, 50, 50]
-        self.health = 1
+        self.health = health
         self.visible = True
 
     def draw(self, screen):
@@ -65,16 +94,38 @@ class suriv(object):
         if self.visible:
             if self.walkCount + 1 >= 27:
                 self.walkCount = 0
-            if self.vel > 0:
-                screen.blit(surivMoving[self.walkCount // 3], (self.x, self.y))
-                self.walkCount += 1
-            else:
-                screen.blit(surivMoving[self.walkCount // 3], (self.x, self.y))
-                self.walkCount += 1
+            if score < 5:
+                if self.vel > 0:
+                    screen.blit(
+                        surivMoving[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+                else:
+                    screen.blit(
+                        surivMoving[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+            if score >= 5 and score < 10:
+                if self.vel > 0:
+                    screen.blit(
+                        surivMoving2[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+                else:
+                    screen.blit(
+                        surivMoving2[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+            if score >= 10:
+                if self.vel > 0:
+                    screen.blit(
+                        surivMoving3[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+                else:
+                    screen.blit(
+                        surivMoving3[self.walkCount // 3], (self.x, self.y))
+                    self.walkCount += 1
+
             pygame.draw.rect(
                 screen, (255, 0, 0), (self.hitbox[0], self.hitbox[1] - 5, 30, 10))
             pygame.draw.rect(
-                screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 5, 30 - (3 * (1 - self.health)), 10))
+                screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 5, 30 - (3 * (3 - self.health)), 10))
             self.hitbox = (self.x, self.y, 31, 57)
 
     def move(self):
@@ -93,8 +144,8 @@ class suriv(object):
                 self.x += self.vel
                 self.walkCount = 0
 
-    def hit(self, ):
-        if self.health >= 0:
+    def hit(self):
+        if self.health > 0:
             self.health -= 1
         else:
             self.visible = False
@@ -106,10 +157,10 @@ class item(object):
         self.y = y
         self.width = width
         self.height = height
-        #self.image = image
+        # self.image = image
 
     def draw(self, screen):
-        screen.blit(pills, (self.x, self.y))
+        screen.blit(pills, (self.x + 200, self.y + 200))
 
 
 class player(object):
@@ -136,7 +187,7 @@ class player(object):
             screen.blit(survivorJumping, (self.x, self.y))
         elif not(self.standing):
             if self.left:
-                screen.blit(walkRight[self.walkCount//3], (self.x, self.y))
+                screen.blit(walkLeft[self.walkCount//3], (self.x, self.y))
                 self.walkCount += 1
             elif self.right:
                 screen.blit(walkRight[self.walkCount//3], (self.x, self.y))
@@ -165,7 +216,7 @@ class projectile(object):
         self.y = y
         self.facing = facing
         self.vel = 8 * facing
-        self.hitbox = [self.x, self.y, 50, 50]
+        self.hitbox = [self.x, self.y, 10, 10]
 
     def draw(self, screen):
         screen.blit(water1shoot, (self.x, self.y))
@@ -193,29 +244,59 @@ def redrawWindow():
     pygame.display.update()
 
 
+def changeBackgroung(bg, bgX):
+    rel_x = bgX % bg.get_rect().width
+    screen.blit(bg, (rel_x - bg.get_rect().width, 0))
+    if rel_x < display_width:
+        screen.blit(bg, (rel_x, 0))
+
+
 survivor = player(40, 300, 64, 64)
 weakSurivs = []
+mediumSurivs = []
+strongSurivs = []
 maxEnemies = 5
+
 for enemy in range(maxEnemies):
     weakSurivs.append(suriv(random.randint(0, display_width), random.randint(
-        100, 300), 64, 64, 800))
+        100, 300), 64, 64, 800, 1))
+
+for enemy in range(maxEnemies):
+    mediumSurivs.append(suriv(random.randint(0, display_width), random.randint(
+        100, 300), 64, 64, 800, 2))
+
+for enemy in range(maxEnemies):
+    strongSurivs.append(suriv(random.randint(0, display_width), random.randint(
+        100, 300), 64, 64, 800, 3))
+
 
 bullets = []
 shootLoop = 0
 run = True
 bgX = 0
-pill = item(100, 100, 50, 50)
-global_time += dt
+pill = item(random.randint(0, display_width), random.randint(
+    0, display_height), 50, 50)
 
 while run:
     pygame.time.delay(15)
-    rel_x = bgX % bg.get_rect().width
-    screen.blit(bg, (rel_x - bg.get_rect().width, 0))
-    if rel_x < display_width:
-        screen.blit(bg, (rel_x, 0))
-    bgX -= 1
 
-    if len(weakSurivs) <= 3:
+    if score < 5:
+        changeBackgroung(bgForest, bgX)
+        bgX -= 1
+    if score >= 5 and score < 10:
+        changeBackgroung(bgForest2, bgX)
+        bgX -= 1
+        pygame.time.delay(15)
+        for suriv in mediumSurivs:
+            suriv.draw(screen)
+    if score >= 10:
+        changeBackgroung(bgDesert, bgX)
+        bgX -= 1
+        pygame.time.delay(15)
+        for suriv in strongSurivs:
+            suriv.draw(screen)
+
+    if score >= 3:
         pill.draw(screen)
 
     if shootLoop > 0:
@@ -227,6 +308,13 @@ while run:
         if event.type == QUIT:
             run = False
 
+# First lvl
+
+    for suriv in weakSurivs:
+        collision = isCollision(suriv.x, suriv.y, survivor.x, survivor.y)
+        if collision:
+            survivor.hit()
+
     for suriv in weakSurivs:
         if suriv.x < display_width and suriv.x > 0:
             suriv.x += suriv.vel
@@ -236,15 +324,48 @@ while run:
             collision = isCollision(suriv.x, suriv.y, bullet.x, bullet.y)
             if collision:
                 suriv.hit()
-                score += 1
                 bullets.pop(bullets.index(bullet))
                 weakSurivs.pop(weakSurivs.index(suriv))
+                score += 1
+
+# Second lvl
+
+    for suriv in mediumSurivs:
+        if suriv.x < display_width and suriv.x > 0:
+            suriv.x += suriv.vel
+
+    for bullet in bullets:
+        for suriv in mediumSurivs:
+            collision = isCollision(suriv.x, suriv.y, bullet.x, bullet.y)
+            if collision:
+                suriv.hit()
+                bullets.pop(bullets.index(bullet))
+                mediumSurivs.pop(mediumSurivs.index(suriv))
+                score += 1
+
+
+# Last lvl
+
+    for suriv in strongSurivs:
+        if suriv.x < display_width and suriv.x > 0:
+            suriv.x += suriv.vel
+
+    for bullet in bullets:
+        for suriv in strongSurivs:
+            collision = isCollision(suriv.x, suriv.y, bullet.x, bullet.y)
+            if collision:
+                suriv.hit()
+                bullets.pop(bullets.index(bullet))
+                strongSurivs.pop(strongSurivs.index(suriv))
+                score += 1
 
     for bullet in bullets:
         if bullet.x > display_width or bullet.x < 0:
             bullets.pop(bullets.index(bullet))
         else:
             bullet.x += bullet.vel
+
+    # Game keys
 
     keys = pygame.key.get_pressed()
 
@@ -254,7 +375,7 @@ while run:
         else:
             facing = 1
 
-        if len(bullets) < 10:
+        if len(bullets) < 3:
             bullets.append(projectile(round(
                 survivor.x + survivor.width // 2), round(survivor.y + survivor.height // 3), facing))
         shootLoop = 1
