@@ -199,7 +199,7 @@ def main():
     survivor = player(40, 300, 64, 64)
     enemies = []
     maxEnemies = 5
-    enemy_vel = 1
+    enemy_vel = 2
 
     def redrawWindow():
         survivor.draw(screen)
@@ -322,7 +322,7 @@ def main():
             enemy.move(enemy_vel)
             for bullet in bullets:
                 if isCollision(enemy.x, enemy.y, bullet.x, bullet.y):
-                    survivor.hit()
+                    enemy.hit()
                     bullets.remove(bullet)
                     enemies.remove(enemy)
                     score += 1
