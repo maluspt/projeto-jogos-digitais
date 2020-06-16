@@ -16,6 +16,10 @@ white = (255, 255, 255)
 # Sprites
 
 pills = pygame.image.load('assets\images\pills.png')
+alcool = pygame.image.load('assets\images\palcool.png')
+firstaid = pygame.image.load('assets\images\pfirstaid.png')
+medicine = pygame.image.load('assets\images\medicine.png')
+
 bgForest = pygame.image.load('assets\images\pforest.jpg')
 bgForest2 = pygame.image.load('assets\images\pforest2.png')
 bgDesert = pygame.image.load('assets\images\pdesert.png')
@@ -41,6 +45,13 @@ surivStanding2 = pygame.image.load('assets\images\corona5.png')
 greenSuriv1 = pygame.transform.scale(surivStanding2, (50, 50))
 surivStanding3 = pygame.image.load('assets\images\corona8.png')
 blueSuriv1 = pygame.transform.scale(surivStanding3, (50, 50))
+
+# Sounds
+audio_menu = pygame.mixer.Sound("assets/sounds/menu1.ogg")
+audio_confirmar = pygame.mixer.Sound('assets/sounds/confirmation_002.ogg')
+audio_jogo = pygame.mixer.Sound('assets/sounds/jogo.ogg')
+shoot = pygame.mixer.Sound('assets/sounds/shoot.ogg')
+boost = pygame.mixer.Sound('assets/sounds/boost.ogg')
 
 # Screen
 display_width = 800
@@ -96,15 +107,15 @@ class Suriv(object):
 
 
 class item(object):
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, img):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        # self.image = image
+        self.img = img
 
     def draw(self, screen):
-        screen.blit(pills, (self.x + 200, self.y + 200))
+        screen.blit(self.img, (self.x + 200, self.y + 200))
 
 
 class player(object):
@@ -121,7 +132,7 @@ class player(object):
         self.jumpCount = 10
         self.standing = True
         self.hitbox = [self.x + 50, self.y + 80, 90, 150]
-        self.health = 10
+        self.health = 20
         self.isAlive = True
 
     def draw(self, screen):
@@ -144,7 +155,7 @@ class player(object):
         pygame.draw.rect(
             screen, (255, 0, 0), (self.hitbox[0], self.hitbox[1] - 30, 100, 10))
         pygame.draw.rect(
-            screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 30, 100 - (10 * (10 - self.health)), 10))
+            screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 30, 100 - ((20 - self.health)), 10))
         self.hitbox = [self.x + 50, self.y + 80, 90, 150]
 
     def hit(self):
@@ -182,12 +193,14 @@ def changeBackgroung(bg, bgX):
         screen.blit(bg, (rel_x, 0))
 
 
-pill = item(random.randint(0, display_width + 50), random.randint(
-    0, display_height + 50), 50, 50)
+pillItem = item(50, 50, 50, 50, pills)
+alcoolItem = item(200, 50, 50, 50, alcool)
+firstAidItem = item(300, 50, 50, 50, firstaid)
 
 
 def main():
     bullets = []
+    items = [pillItem, alcoolItem, firstAidItem]
     shootLoop = 0
     run = True
     level = 0
@@ -258,7 +271,11 @@ def main():
             pygame.time.delay(15)
 
         if score >= 3:
-            pill.draw(screen)
+            items[0].draw(screen)
+        if score >= 10:
+            items[1].draw(screen)
+        if score >= 20:
+            items[2].draw(screen)
 
         if shootLoop > 0:
             shootLoop += 1
@@ -282,6 +299,7 @@ def main():
                 bullets.append(projectile(round(
                     survivor.x + survivor.width // 2), round(survivor.y + survivor.height // 3), facing))
             shootLoop = 1
+            shoot.play()
         if keys[pygame.K_LEFT] and survivor.x > survivor.vel:
             survivor.x -= survivor.vel
             survivor.left = True
@@ -328,12 +346,24 @@ def main():
                     score += 1
             if enemy.x + enemy.img.get_width() < 0:
                 enemies.remove(enemy)
+                survivor.hit()
+
+        for item in items:
+            if isCollision(item.x, item.y, survivor.x, survivor.y):
+                items.remove(item)
+                boost.play()
+                print("a")
+
+        if level == 3:
+            if len(enemies) == 0:
+                main_menu()
 
 
 def main_menu():
     title_font = pygame.font.SysFont("comicsans", 50)
     run = True
     while run:
+        # audio_menu.play()
         screen.blit(bgForest, (0, 0))
         title_label = title_font.render(
             "Pressione o botao do mouse para jogar!", 1, (255, 255, 255))
