@@ -106,13 +106,14 @@ class Suriv(object):
         return self.img.get_width()
 
 
-class item(object):
+class Item(object):
     def __init__(self, x, y, width, height, img):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.img = img
+        self.rect = self.img.get_rect()
 
     def draw(self, screen):
         screen.blit(self.img, (self.x + 200, self.y + 200))
@@ -134,6 +135,8 @@ class player(object):
         self.hitbox = [self.x + 50, self.y + 80, 90, 150]
         self.health = 20
         self.isAlive = True
+        self.img = surivStanding
+        self.rect = self.img.get_rect()
 
     def draw(self, screen):
         if self.walkCount + 1 >= 27:
@@ -193,14 +196,9 @@ def changeBackgroung(bg, bgX):
         screen.blit(bg, (rel_x, 0))
 
 
-pillItem = item(50, 50, 50, 50, pills)
-alcoolItem = item(200, 50, 50, 50, alcool)
-firstAidItem = item(300, 50, 50, 50, firstaid)
-
-
 def main():
     bullets = []
-    items = [pillItem, alcoolItem, firstAidItem]
+    items = []
     shootLoop = 0
     run = True
     level = 0
@@ -224,6 +222,9 @@ def main():
 
         for bullet in bullets:
             bullet.draw(screen)
+
+        for item in items:
+            item.draw(screen)
 
         level_label = main_font.render(f"Level: {level}", 1, (255, 255, 255))
         screen.blit(level_label, (display_width -
@@ -271,11 +272,14 @@ def main():
             pygame.time.delay(15)
 
         if score >= 3:
-            items[0].draw(screen)
+            pillItem = Item(50, 50, 50, 50, pills)
+            items.append(pillItem)
         if score >= 10:
-            items[1].draw(screen)
+            alcoolItem = Item(200, 50, 50, 50, alcool)
+            items.append(alcoolItem)
         if score >= 20:
-            items[2].draw(screen)
+            firstAidItem = Item(300, 50, 50, 50, firstaid)
+            items.append(firstAidItem)
 
         if shootLoop > 0:
             shootLoop += 1
@@ -349,10 +353,9 @@ def main():
                 survivor.hit()
 
         for item in items:
-            if isCollision(item.x, item.y, survivor.x, survivor.y):
-                items.remove(item)
-                boost.play()
-                print("a")
+            if survivor.rect.colliderect(item.rect):
+                items.pop(items.index(item))
+                print('a')
 
         if level == 3:
             if len(enemies) == 0:
