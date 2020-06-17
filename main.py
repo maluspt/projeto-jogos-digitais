@@ -27,14 +27,18 @@ bgForest2 = pygame.image.load('assets\images\pforest2.png')
 bgDesert = pygame.image.load('assets\images\pdesert.png')
 water1shoot = pygame.image.load('assets\images\pwater.png')
 walkRight = [pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
-    'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'), pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
-    'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'), pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
-    'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png')]
+    'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'),
+             pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
+        'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png'),
+             pygame.image.load('assets\images\psurvivor.png'), pygame.image.load(
+        'assets\images\psurvivorRun.png'), pygame.image.load('assets\images\psurvivorRun2.png')]
 
 walkLeft = [pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
-    'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png'), pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
-    'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png'), pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
-    'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png')]
+    'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png'),
+            pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
+        'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png'),
+            pygame.image.load('assets\images\psurvivorleft.png'), pygame.image.load(
+        'assets\images\psurvivorRunleft.png'), pygame.image.load('assets\images\psurvivorRun2left.png')]
 survivorStanding = pygame.image.load(
     'assets\images\psurvivorStanding.png')
 survivorJumping = pygame.image.load('assets\images\pjump.png')
@@ -145,12 +149,12 @@ class player(object):
             self.walkCount = 0
         if (self.isJumping):
             screen.blit(survivorJumping, (self.x, self.y))
-        elif not(self.standing):
+        elif not (self.standing):
             if self.left:
-                screen.blit(walkLeft[self.walkCount//3], (self.x, self.y))
+                screen.blit(walkLeft[self.walkCount // 3], (self.x, self.y))
                 self.walkCount += 1
             elif self.right:
-                screen.blit(walkRight[self.walkCount//3], (self.x, self.y))
+                screen.blit(walkRight[self.walkCount // 3], (self.x, self.y))
                 self.walkCount += 1
         else:
             if self.right:
@@ -199,6 +203,7 @@ def changeBackgroung(bg, bgX):
 
 
 def main():
+    audio_jogo.play()
     bullets = []
     items = []
     shootLoop = 0
@@ -234,8 +239,8 @@ def main():
 
         if lost:
             lost_label = lost_font.render("GAME OVER!", 1, (255, 255, 255))
-            screen.blit(lost_label, (display_width/2 -
-                                     lost_label.get_width()/2, 350))
+            screen.blit(lost_label, (display_width / 2 -
+                                     lost_label.get_width() / 2, 350))
         pygame.display.update()
 
     while run:
@@ -316,7 +321,7 @@ def main():
         else:
             survivor.standing = True
             survivor.walkCount = 0
-        if not(survivor.isJumping):
+        if not (survivor.isJumping):
             if keys[pygame.K_UP] and survivor.y > survivor.vel:
                 survivor.isJumping = True
                 survivor.left = False
@@ -380,7 +385,6 @@ def eventos():
 
 
 def selecao():
-
     global menu_selecao, botao_enter
 
     if menu_selecao == 3:
@@ -460,15 +464,15 @@ def selecao():
             "---- Stefan Jong Heun Oh - TIA: ----", True, (80, 80, 80))
         voltar_render = fonte.render("> Voltar <", True, (80, 80, 80))
 
-        screen.blit(fonte_render, ((display_width / 2)-130, (display_height/2)))
+        screen.blit(fonte_render, ((display_width / 2) - 130, (display_height / 2)))
         screen.blit(fonte_render1, ((display_width / 2) -
-                                    130, (display_height / 2)+20))
+                                    130, (display_height / 2) + 20))
         screen.blit(fonte_render2, ((display_width / 2) -
-                                    130, (display_height / 2)+40))
+                                    130, (display_height / 2) + 40))
         screen.blit(fonte_render3, ((display_width / 2) -
-                                    130, (display_height / 2)+60))
+                                    130, (display_height / 2) + 60))
         screen.blit(voltar_render, ((display_width / 2) -
-                                    45, (display_height / 2)+100))
+                                    45, (display_height / 2) + 100))
 
     if menu_selecao == 401:
         menu_selecao = 400
@@ -486,6 +490,7 @@ def selecao():
         pygame.quit()
         exit()
 
+
 def main_menu():
     title_font = pygame.font.SysFont("comicsans", 30)
     audio_menu.play()
@@ -496,7 +501,7 @@ def main_menu():
     screen.blit(title_label, (display_width / 2 -
                               title_label.get_width() / 2, 250))
     pygame.display.update()
-    
+
 
 while True:
     main_menu()
@@ -507,6 +512,5 @@ while True:
             audio_confirmar.play()
             audio_menu.stop()
             main()
-
 
 main_menu()
