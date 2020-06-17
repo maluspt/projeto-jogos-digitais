@@ -4,8 +4,10 @@ from pygame.locals import *
 import random
 import os
 
+menu_selecao = 3
+os.environ['SDL_VIDEO_CETERED'] = '1'
 pygame.init()
-
+botao_enter = False
 
 # Colors
 
@@ -359,23 +361,128 @@ def main():
                 main_menu()
 
 
-def main_menu():
-    title_font = pygame.font.SysFont("comicsans", 50)
-    run = True
-    while run:
-        # audio_menu.play()
-        screen.blit(bgForest, (0, 0))
-        title_label = title_font.render(
-            "Pressione o botao do mouse para jogar!", 1, (255, 255, 255))
-        screen.blit(title_label, (display_width/2 -
-                                  title_label.get_width()/2, 350))
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                main()
-    pygame.quit()
+def eventos():
+    global menu_selecao, botao_enter
+    for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
 
+            if event.type == KEYDOWN:
+                if event.key == K_DOWN:
+                    menu_selecao += 1
+                if event.key == K_UP:
+                    menu_selecao -= 1
+                if event.key == K_RETURN:
+                    menu_selecao += 10
 
-main_menu()
+def selecao():
+
+        global menu_selecao, botao_enter
+
+        if menu_selecao == 3:
+            screen.blit(bgForest, (0, 0))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            ranking = fonte.render("> Ranking <", True, (80, 80, 80))
+            screen.blit(ranking, ((display_width / 2) - 50, (display_height / 2) + 44))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            sobre = fonte.render("Sobre", True, (80, 80, 80))
+            screen.blit(sobre, ((display_width / 2) - 50, (display_height / 2) + 66))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            sair = fonte.render("Sair", True, (80, 80, 80))
+            screen.blit(sair, ((display_width / 2) - 50, (display_height / 2) + 88))
+
+        if menu_selecao == 4:
+            screen.blit(bgForest, (0, 0))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            ranking = fonte.render("Ranking", True, (80, 80, 80))
+            screen.blit(ranking, ((display_width / 2) - 50, (display_height / 2) + 44))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            sobre = fonte.render("> Sobre <", True, (80, 80, 80))
+            screen.blit(sobre, ((display_width / 2) - 50, (display_height / 2) + 66))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            sair = fonte.render("Sair", True, (80, 80, 80))
+            screen.blit(sair, ((display_width / 2) - 50, (display_height / 2) + 88))
+
+        if menu_selecao == 5:
+            screen.blit(bgForest, (0, 0))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            ranking = fonte.render("Ranking", True, (80, 80, 80))
+            screen.blit(ranking, ((display_width / 2) - 50, (display_height / 2) + 44))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            sobre = fonte.render("Sobre", True, (80, 80, 80))
+            screen.blit(sobre, ((display_width / 2) - 50, (display_height / 2) + 66))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            sair = fonte.render("> Sair <", True, (80, 80, 80))
+            screen.blit(sair, ((display_width / 2) - 50, (display_height / 2) + 88))
+
+        if menu_selecao == 6:
+            menu_selecao = 5
+
+        if menu_selecao == 0:
+            menu_selecao = 1
+
+        if menu_selecao == 14:
+            menu_selecao = 400
+
+        if menu_selecao == 400:
+            screen.blit(bgForest, (0, 0))
+
+            fonte = pygame.font.SysFont("comicsans", 20, False, False)
+            fonte_render = fonte.render("---- Criado por: ---- ", True, (80, 80, 80))
+            fonte_render1 = fonte.render("---- Ana Carolina Dias da Cunha - TIA: ----", True, (80, 80, 80))
+            fonte_render2 = fonte.render("---- Maria Luiza - TIA: ----", True, (80, 80, 80))
+            fonte_render3 = fonte.render("---- Stefan Jong Heun Oh - TIA: ----", True, (80, 80, 80))
+            voltar_render = fonte.render("> Voltar <", True, (80, 80, 80))
+
+            screen.blit(fonte_render, ((display_width / 2)-130, (display_height/2)))
+            screen.blit(fonte_render1, ((display_width / 2) -130, (display_height / 2)+20))
+            screen.blit(fonte_render2, ((display_width / 2) -130, (display_height / 2)+40))
+            screen.blit(fonte_render3, ((display_width / 2) -130, (display_height / 2)+60))
+            screen.blit(voltar_render, ((display_width / 2) -45, (display_height / 2)+100))
+
+        if menu_selecao == 401:
+            menu_selecao = 400
+
+        if menu_selecao == 399:
+            menu_selecao = 400
+
+        if menu_selecao == 410:
+            menu_selecao = 4
+
+        if menu_selecao == 15:
+            menu_selecao = 500
+
+        if menu_selecao == 500:
+            pygame.quit()
+            exit()
+
+while True:
+    title_font = pygame.font.SysFont("comicsans", 30)
+    audio_menu.play()
+    print(botao_enter)
+    print(menu_selecao)
+    eventos()
+    selecao()
+    title_label = title_font.render(
+        "Pressione o botao do mouse para jogar!", 1, (80, 80, 80))
+    screen.blit(title_label, (display_width / 2 -
+                              title_label.get_width() / 2, 250))
+    pygame.display.update()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            audio_confirmar.play()
+            audio_menu.stop()
+            main()
+pygame.quit()
