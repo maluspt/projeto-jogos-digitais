@@ -356,118 +356,133 @@ def main():
 
         for item in items:
             if survivor.rect.colliderect(item.rect):
-                items.pop(items.index(item))
+                items.remove(item)
                 print('a')
-
-        if level == 3:
-            if len(enemies) == 0:
-                main_menu()
 
 
 def eventos():
     global menu_selecao, botao_enter
     for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                exit()
+        if event.type == QUIT:
+            pygame.quit()
+            exit()
 
-            if event.type == KEYDOWN:
-                if event.key == K_DOWN:
-                    menu_selecao += 1
-                if event.key == K_UP:
-                    menu_selecao -= 1
-                if event.key == K_RETURN:
-                    menu_selecao += 10
+        if event.type == KEYDOWN:
+            if event.key == K_DOWN:
+                menu_selecao += 1
+            if event.key == K_UP:
+                menu_selecao -= 1
+            if event.key == K_RETURN:
+                menu_selecao += 10
+
 
 def selecao():
 
-        global menu_selecao, botao_enter
+    global menu_selecao, botao_enter
 
-        if menu_selecao == 3:
-            screen.blit(bgForest, (0, 0))
+    if menu_selecao == 3:
+        screen.blit(bgForest, (0, 0))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            ranking = fonte.render("> Ranking <", True, (80, 80, 80))
-            screen.blit(ranking, ((display_width / 2) - 50, (display_height / 2) + 44))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        ranking = fonte.render("> Ranking <", True, (80, 80, 80))
+        screen.blit(ranking, ((display_width / 2) -
+                              50, (display_height / 2) + 44))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            sobre = fonte.render("Sobre", True, (80, 80, 80))
-            screen.blit(sobre, ((display_width / 2) - 50, (display_height / 2) + 66))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        sobre = fonte.render("Sobre", True, (80, 80, 80))
+        screen.blit(sobre, ((display_width / 2) -
+                            50, (display_height / 2) + 66))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            sair = fonte.render("Sair", True, (80, 80, 80))
-            screen.blit(sair, ((display_width / 2) - 50, (display_height / 2) + 88))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        sair = fonte.render("Sair", True, (80, 80, 80))
+        screen.blit(sair, ((display_width / 2) -
+                           50, (display_height / 2) + 88))
 
-        if menu_selecao == 4:
-            screen.blit(bgForest, (0, 0))
+    if menu_selecao == 4:
+        screen.blit(bgForest, (0, 0))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            ranking = fonte.render("Ranking", True, (80, 80, 80))
-            screen.blit(ranking, ((display_width / 2) - 50, (display_height / 2) + 44))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        ranking = fonte.render("Ranking", True, (80, 80, 80))
+        screen.blit(ranking, ((display_width / 2) -
+                              50, (display_height / 2) + 44))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            sobre = fonte.render("> Sobre <", True, (80, 80, 80))
-            screen.blit(sobre, ((display_width / 2) - 50, (display_height / 2) + 66))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        sobre = fonte.render("> Sobre <", True, (80, 80, 80))
+        screen.blit(sobre, ((display_width / 2) -
+                            50, (display_height / 2) + 66))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            sair = fonte.render("Sair", True, (80, 80, 80))
-            screen.blit(sair, ((display_width / 2) - 50, (display_height / 2) + 88))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        sair = fonte.render("Sair", True, (80, 80, 80))
+        screen.blit(sair, ((display_width / 2) -
+                           50, (display_height / 2) + 88))
 
-        if menu_selecao == 5:
-            screen.blit(bgForest, (0, 0))
+    if menu_selecao == 5:
+        screen.blit(bgForest, (0, 0))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            ranking = fonte.render("Ranking", True, (80, 80, 80))
-            screen.blit(ranking, ((display_width / 2) - 50, (display_height / 2) + 44))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        ranking = fonte.render("Ranking", True, (80, 80, 80))
+        screen.blit(ranking, ((display_width / 2) -
+                              50, (display_height / 2) + 44))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            sobre = fonte.render("Sobre", True, (80, 80, 80))
-            screen.blit(sobre, ((display_width / 2) - 50, (display_height / 2) + 66))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        sobre = fonte.render("Sobre", True, (80, 80, 80))
+        screen.blit(sobre, ((display_width / 2) -
+                            50, (display_height / 2) + 66))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            sair = fonte.render("> Sair <", True, (80, 80, 80))
-            screen.blit(sair, ((display_width / 2) - 50, (display_height / 2) + 88))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        sair = fonte.render("> Sair <", True, (80, 80, 80))
+        screen.blit(sair, ((display_width / 2) -
+                           50, (display_height / 2) + 88))
 
-        if menu_selecao == 6:
-            menu_selecao = 5
+    if menu_selecao == 6:
+        menu_selecao = 5
 
-        if menu_selecao == 0:
-            menu_selecao = 1
+    if menu_selecao == 0:
+        menu_selecao = 1
 
-        if menu_selecao == 14:
-            menu_selecao = 400
+    if menu_selecao == 14:
+        menu_selecao = 400
 
-        if menu_selecao == 400:
-            screen.blit(bgForest, (0, 0))
+    if menu_selecao == 400:
+        screen.blit(bgForest, (0, 0))
 
-            fonte = pygame.font.SysFont("comicsans", 20, False, False)
-            fonte_render = fonte.render("---- Criado por: ---- ", True, (80, 80, 80))
-            fonte_render1 = fonte.render("---- Ana Carolina Dias da Cunha - TIA: ----", True, (80, 80, 80))
-            fonte_render2 = fonte.render("---- Maria Luiza - TIA: ----", True, (80, 80, 80))
-            fonte_render3 = fonte.render("---- Stefan Jong Heun Oh - TIA: ----", True, (80, 80, 80))
-            voltar_render = fonte.render("> Voltar <", True, (80, 80, 80))
+        fonte = pygame.font.SysFont("comicsans", 20, False, False)
+        fonte_render = fonte.render(
+            "---- Criado por: ---- ", True, (80, 80, 80))
+        fonte_render1 = fonte.render(
+            "---- Ana Carolina Dias da Cunha - TIA: ----", True, (80, 80, 80))
+        fonte_render2 = fonte.render(
+            "---- Maria Luiza - TIA: ----", True, (80, 80, 80))
+        fonte_render3 = fonte.render(
+            "---- Stefan Jong Heun Oh - TIA: ----", True, (80, 80, 80))
+        voltar_render = fonte.render("> Voltar <", True, (80, 80, 80))
 
-            screen.blit(fonte_render, ((display_width / 2)-130, (display_height/2)))
-            screen.blit(fonte_render1, ((display_width / 2) -130, (display_height / 2)+20))
-            screen.blit(fonte_render2, ((display_width / 2) -130, (display_height / 2)+40))
-            screen.blit(fonte_render3, ((display_width / 2) -130, (display_height / 2)+60))
-            screen.blit(voltar_render, ((display_width / 2) -45, (display_height / 2)+100))
+        screen.blit(fonte_render, ((display_width / 2)-130, (display_height/2)))
+        screen.blit(fonte_render1, ((display_width / 2) -
+                                    130, (display_height / 2)+20))
+        screen.blit(fonte_render2, ((display_width / 2) -
+                                    130, (display_height / 2)+40))
+        screen.blit(fonte_render3, ((display_width / 2) -
+                                    130, (display_height / 2)+60))
+        screen.blit(voltar_render, ((display_width / 2) -
+                                    45, (display_height / 2)+100))
 
-        if menu_selecao == 401:
-            menu_selecao = 400
+    if menu_selecao == 401:
+        menu_selecao = 400
 
-        if menu_selecao == 399:
-            menu_selecao = 400
+    if menu_selecao == 399:
+        menu_selecao = 400
 
-        if menu_selecao == 410:
-            menu_selecao = 4
+    if menu_selecao == 410:
+        menu_selecao = 4
 
-        if menu_selecao == 15:
-            menu_selecao = 500
+    if menu_selecao == 15:
+        menu_selecao = 500
 
-        if menu_selecao == 500:
-            pygame.quit()
-            exit()
+    if menu_selecao == 500:
+        pygame.quit()
+        exit()
+
 
 while True:
     title_font = pygame.font.SysFont("comicsans", 30)
