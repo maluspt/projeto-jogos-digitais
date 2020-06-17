@@ -273,19 +273,16 @@ def main():
             bgX -= 1
             pygame.time.delay(15)
 
-        if score >= 3:
-            pillItem = Item(50, 50, 50, 50, pills)
-            items.append(pillItem)
-        if score >= 10:
-            alcoolItem = Item(200, 50, 50, 50, alcool)
-            items.append(alcoolItem)
-        if score >= 20:
-            firstAidItem = Item(300, 50, 50, 50, firstaid)
-            items.append(firstAidItem)
+        if score >= 3 and score < 10:
+            items[0].draw(screen)
+        if score >= 10 and score < 20:
+            items[1].draw(screen)
+        if score >= 20 and score < 30:
+            items[2].draw(screen)
 
         if shootLoop > 0:
             shootLoop += 1
-        if shootLoop > 3:
+        if shootLoop > 10:
             shootLoop = 0
 
         for event in pygame.event.get():
@@ -301,7 +298,7 @@ def main():
             else:
                 facing = 1
 
-            if len(bullets) < 3:
+            if len(bullets) < 10:
                 bullets.append(projectile(round(
                     survivor.x + survivor.width // 2), round(survivor.y + survivor.height // 3), facing))
             shootLoop = 1
@@ -355,9 +352,15 @@ def main():
                 survivor.hit()
 
         for item in items:
-            if survivor.rect.colliderect(item.rect):
+            if isCollision(item.x, item.y, survivor.x, survivor.y):
                 items.remove(item)
-                print('a')
+                boost.play()
+                print("a")
+                pygame.display.update()
+
+        if level == 3:
+            if len(enemies) == 0 and survivor.health > 0:
+                main_menu()
 
 
 def eventos():
@@ -367,7 +370,7 @@ def eventos():
             pygame.quit()
             exit()
 
-        if event.type == KEYDOWN:
+        if event.type == pygame.KEYDOWN:
             if event.key == K_DOWN:
                 menu_selecao += 1
             if event.key == K_UP:
@@ -452,7 +455,7 @@ def selecao():
         fonte_render1 = fonte.render(
             "---- Ana Carolina Dias da Cunha - TIA: ----", True, (80, 80, 80))
         fonte_render2 = fonte.render(
-            "---- Maria Luiza - TIA: ----", True, (80, 80, 80))
+            "---- Maria Luiza - TIA: 41814517", True, (80, 80, 80))
         fonte_render3 = fonte.render(
             "---- Stefan Jong Heun Oh - TIA: ----", True, (80, 80, 80))
         voltar_render = fonte.render("> Voltar <", True, (80, 80, 80))
@@ -483,19 +486,20 @@ def selecao():
         pygame.quit()
         exit()
 
-
-while True:
+def main_menu():
     title_font = pygame.font.SysFont("comicsans", 30)
     audio_menu.play()
-    print(botao_enter)
-    print(menu_selecao)
     eventos()
     selecao()
     title_label = title_font.render(
-        "Pressione o botao do mouse para jogar!", 1, (80, 80, 80))
+        "Pressione o botão do mouse para jogar!", 1, (80, 80, 80))
     screen.blit(title_label, (display_width / 2 -
                               title_label.get_width() / 2, 250))
     pygame.display.update()
+    
+
+while True:
+    main_menu()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -503,4 +507,6 @@ while True:
             audio_confirmar.play()
             audio_menu.stop()
             main()
-pygame.quit()
+
+
+main_menu()
