@@ -139,7 +139,7 @@ class player(object):
         self.jumpCount = 10
         self.standing = True
         self.hitbox = [self.x + 50, self.y + 80, 90, 150]
-        self.health = 20
+        self.health = 10
         self.isAlive = True
         self.img = surivStanding
         self.rect = self.img.get_rect()
@@ -164,7 +164,7 @@ class player(object):
         pygame.draw.rect(
             screen, (255, 0, 0), (self.hitbox[0], self.hitbox[1] - 30, 100, 10))
         pygame.draw.rect(
-            screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 30, 100 - ((20 - self.health)), 10))
+            screen, (0, 128, 0), (self.hitbox[0], self.hitbox[1] - 30, 100 - ((10 - self.health)), 10))
         self.hitbox = [self.x + 50, self.y + 80, 90, 150]
 
     def hit(self):
@@ -201,11 +201,15 @@ def changeBackgroung(bg, bgX):
     if rel_x < display_width:
         screen.blit(bg, (rel_x, 0))
 
+pillItem = Item(50, 50, 50, 50, pills)
+alcoolItem = Item(200, 50, 50, 50, alcool)
+firstAidItem = Item(300, 50, 50, 50, firstaid)
+
 
 def main():
     audio_jogo.play()
     bullets = []
-    items = []
+    items = [pillItem, alcoolItem, firstAidItem]
     shootLoop = 0
     run = True
     level = 0
@@ -229,9 +233,6 @@ def main():
 
         for bullet in bullets:
             bullet.draw(screen)
-
-        for item in items:
-            item.draw(screen)
 
         level_label = main_font.render(f"Level: {level}", 1, (255, 255, 255))
         screen.blit(level_label, (display_width -
